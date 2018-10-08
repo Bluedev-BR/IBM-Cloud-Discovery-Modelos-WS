@@ -1,7 +1,7 @@
 
 # coding: utf-8
 
-# In[1]:
+# In[2]:
 
 
 import sys
@@ -13,198 +13,200 @@ import ibm_boto3
 def __iter__(self): return 0
 
 # @hidden_cell
-# The following code accesses a file in your IBM Cloud Object Storage. It includes your credentials.
-# You might want to remove those credentials before you share your notebook.
-
-<<falta codigo aqui - com credenciais>>
 
 df = pd.read_csv(body)
 df.head()
 
 
-# In[3]:
+# In[56]:
 
 
 df = df.loc[:,['bairro','preco','area','suites','dormitorios','banheiros','vagas']]
 
 
-# In[5]:
+# In[57]:
 
 
 df.dtypes
 
 
-# In[6]:
+# In[58]:
 
 
 df['bairro'] = df['bairro'].astype('category')
 
 
-# In[7]:
+# In[59]:
 
 
 df.describe()
 
 
-# In[9]:
+# In[60]:
 
 
 df[df.preco == 0]
 
 
-# In[10]:
+# In[61]:
 
 
 df = df[df.preco > 0]
 
 
-# In[11]:
+# In[62]:
 
 
 df.shape
 
 
-# In[12]:
+# In[63]:
 
 
 df.preco.describe()
 
 
-# In[14]:
+# In[64]:
 
 
 pd.isna(df.preco).sum()
 
 
-# In[15]:
+# In[65]:
 
 
 pd.isna(df.area).sum()
 
 
-# In[26]:
+# In[66]:
 
 
 df = df.dropna()
 
 
-# In[27]:
+# In[67]:
 
 
 df.shape
 
 
-# In[28]:
+# In[68]:
 
 
 pd.isna(df).sum()
 
 
-# In[29]:
+# In[69]:
 
 
 df.describe()
 
 
-# In[37]:
+# In[70]:
 
 
 import matplotlib.pyplot as plt
 plt.hist(df.area)
 
 
-# In[34]:
+# In[71]:
 
 
 min(df.area)
 
 
-# In[36]:
+# In[72]:
 
 
 df.area.describe()
 
 
-# In[38]:
+# In[73]:
 
 
 df = df[df.area > 84]
 
 
-# In[39]:
+# In[74]:
 
 
 df = df[df.area < 196]
 
 
-# In[40]:
+# In[75]:
 
 
 df.shape
 
 
-# In[41]:
+# In[76]:
 
 
 plt.hist(df.area)
 
 
-# In[42]:
+# In[77]:
 
 
 plt.hist(df.suites)
 
 
-# In[43]:
+# In[78]:
 
 
 plt.hist(df.dormitorios)
 
 
-# In[45]:
+# In[79]:
 
 
 df.describe()
 
 
-# In[46]:
+# In[80]:
 
 
 df = df[df.dormitorios < 10]
 
 
-# In[47]:
+# In[81]:
 
 
 df.describe()
 
 
-# In[48]:
+# In[82]:
 
 
 df =df[df.banheiros < 10]
 
 
-# In[49]:
+# In[83]:
 
 
 df.describe()
 
 
-# In[50]:
+# In[84]:
 
 
 df = df[df.vagas < 34]
 
 
-# In[52]:
+# In[85]:
 
 
 df.describe()
 
 
-# In[53]:
+# In[1]:
 
 
-df.to_csv('imoveis_tratados.csv', encoding='utf-8')
+# @hidden_cell
+# The project token is an authorization token that is used to access project resources like data sources, connections, and used by platform APIs.
+
+# In[3]:
+
+
+project.save_data("imoveis-tratados3.csv", df.to_csv())
 
