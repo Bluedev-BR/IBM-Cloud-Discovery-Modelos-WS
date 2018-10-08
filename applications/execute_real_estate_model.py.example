@@ -1,0 +1,30 @@
+import urllib3, requests, json
+
+wml_credentials={
+"url": wml_service_credentials_url,
+"username": wml_service_credentials_username,
+"password": wml_service_credentials_password
+}
+
+headers = urllib3.util.make_headers(basic_auth='{username}:{password}'.format(username=wml_credentials['username'], password=wml_credentials['password']))
+url = '{}/v3/identity/token'.format(wml_credentials['url'])
+response = requests.get(url, headers=headers)
+mltoken = json.loads(response.text).get('token')
+
+header = {'Content-Type': 'application/json', 'Authorization': 'Bearer ' + mltoken}
+
+values = []
+values.append(["paraiso",110,1,3,3,"",2])
+values.append(["vila-sonia",110,1,3,3,"",2])
+values.append(["vila-mariana",70,1,3,3,"",1])
+values.append(["vila-nova-conceicao",32,1,1,1,"",1])
+
+# NOTE: manually define and pass the array(s) of values to be scored in the next line
+payload_scoring = {"fields": ["bairro", "area", "suites", "dormitorios", "banheiros", "descricao", "vagas"], "values": values}
+
+response_scoring = requests.post('https://ibm-watson-ml.mybluemix.net/v3/wml_instances/39411080-2310-4e81-81cb-f71f0a494381/deployments/d3409c96-5e21-4342-abf2-a55946b9b0db/online', json=payload_scoring, headers=header)
+print("Scoring response")
+print(json.loads(response_scoring.text))
+
+for i in json.loads(response_scoring.text)['values']:
+    print ("o preco deste imovel ",i[0:7]," eh ",i[8])
